@@ -1,11 +1,20 @@
 package com.di2356.netphonething;
 
+import java.io.BufferedReader;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.net.URI;
+import java.net.URL;
 import java.net.UnknownHostException;
 import java.util.Iterator;
 
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
+
+import org.apache.http.HttpResponse;
+import org.apache.http.client.methods.HttpGet;
+import org.apache.http.impl.client.DefaultHttpClient;
 import org.xbill.DNS.*;
 
 import android.app.Activity;
@@ -31,11 +40,53 @@ public class MainActivity extends Activity {
 	}
 	
 	public void buttonClick(View view) {	
-		new LookupTask().execute(mEditText.getText().toString());
+		//new LookupTask().execute(mEditText.getText().toString());
+	    new getNumberTask().execute(mEditText.getText().toString());
+	}
+	
+	class getNumberTask extends AsyncTask<String, Void, String> {
+
+        @Override
+        protected String doInBackground(String... params) {
+            String url = "http://"+params[0]+"/.well-known/phone-number.txt";
+            
+
+            String response = "";
+            try {
+                DefaultHttpClient client = new DefaultHttpClient();
+                HttpGet httpGet = new HttpGet(new URI(url));
+                HttpResponse execute = client.execute(httpGet);
+                InputStream content = execute.getEntity().getContent();
+
+                BufferedReader buffer = new BufferedReader(
+                        new InputStreamReader(content));
+                String s = "";
+                while ((s = buffer.readLine()) != null) {
+                    response += s;
+                }
+
+            } catch (Exception e) {
+                e.printStackTrace();
+                return e.getMessage();
+            }
+            return "tel="+response;
+        }
+        
+        @Override
+        protected void onPostExecute(String result) {
+            super.onPostExecute(result);
+            if (result.indexOf("tel=") != -1) {
+                String tel = result.replace("tel=", "");
+                makePhoneCall(tel);
+                mErrorText.setText("");
+            } else {
+                mErrorText.setText("");
+            }
+        }
+	    
 	}
 	
 	class LookupTask extends AsyncTask<String, Void, String> {
-
 		@Override
 		protected String doInBackground(String... arg0) {
 			String domain = arg0[0];
@@ -85,16 +136,12 @@ public class MainActivity extends Activity {
 			super.onPostExecute(result);
 			if (result.indexOf("tel") != -1) {
 				String tel = result.replace("tel=", "");
-				Intent intent = new Intent(Intent.ACTION_CALL);
-				intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-				intent.setData(Uri.parse("tel:" + tel));
-				getApplicationContext().startActivity(intent);
+				makePhoneCall(tel);
 				mErrorText.setText("");
 			} else {
 				mErrorText.setText(result);
 			}
 		}
-		
 	}
 	
 	@Override
@@ -102,6 +149,13 @@ public class MainActivity extends Activity {
 		// Inflate the menu; this adds items to the action bar if it is present.
 		getMenuInflater().inflate(R.menu.main, menu);
 		return true;
+	}
+	
+	public void makePhoneCall(String number) {
+	    Intent intent = new Intent(Intent.ACTION_CALL);
+        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        intent.setData(Uri.parse("tel:" + number));
+        getApplicationContext().startActivity(intent);
 	}
 
 }
