@@ -1,3 +1,0 @@
-NetPhoneThing
-=============
-init

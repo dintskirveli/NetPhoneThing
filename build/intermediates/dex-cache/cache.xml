@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<items version="2" >
+
+    <item
+        jar="/Users/dintskirveli/AndroidstudioProjects/NetPhoneThing/app/libs/dnsjava-2.1.6.jar"
+        jumboMode="false"
+        revision="21.1.1"
+        sha1="2c80302163621952b71657c623d1b0a8985c6bcb">
+        <dex dex="/Users/dintskirveli/AndroidstudioProjects/NetPhoneThing/app/build/intermediates/pre-dexed/debug/dnsjava-2.1.6-8baa4998519038c2aa05de5d1ecb55a0142a3a5c.jar" />
+    </item>
+    <item
+        jar="/Users/dintskirveli/Documents/sdk/extras/android/m2repository/com/android/support/support-v4/19.1.0/support-v4-19.1.0.jar"
+        jumboMode="false"
+        revision="21.1.1"
+        sha1="85f201b380937e61a9dce6ca90ccf6872abbfb67">
+        <dex dex="/Users/dintskirveli/AndroidstudioProjects/NetPhoneThing/app/build/intermediates/pre-dexed/debug/support-v4-19.1.0-0c13b3ae5232762a888ba9714428eb63c4c52434.jar" />
+    </item>
+
+</items>
